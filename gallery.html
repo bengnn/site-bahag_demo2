@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inoue Project | The Canvas (Full Gallery)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Styles spécifiques pour la page galerie */
+    .gallery-page-header {
+      padding: 60px 20px;
+      text-align: center;
+      background: var(--bg-light);
+      border-bottom: 1px solid #eee;
+    }
+    .month-section {
+      padding: 50px 0;
+      border-bottom: 1px solid #eee;
+    }
+    .month-title {
+      font-size: 1.8rem;
+      color: var(--text-dark);
+      margin-bottom: 5px;
+      display: inline-block;
+      border-bottom: 3px solid var(--accent-blue);
+      padding-bottom: 5px;
+    }
+    .month-subtitle {
+      color: var(--text-gray);
+      margin-bottom: 30px;
+      font-size: 0.95rem;
+    }
+    .grid-4x4 {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .photo-card {
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #eaeaea;
+      transition: transform 0.3s ease;
+    }
+    .photo-card:hover {
+      transform: translateY(-5px);
+    }
+    .photo-img {
+      height: 200px;
+      background: #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+    }
+    .photo-caption {
+      padding: 15px;
+      font-size: 0.85rem;
+      color: var(--text-gray);
+    }
+    .btn-back {
+      margin-top: 20px;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body style="padding-top: 0;"> <header class="gallery-page-header">
+    <div class="container">
+      <span style="color: var(--accent-blue); font-weight: 700; letter-spacing: 2px;">INOUE.</span>
+      <h1 style="font-size: 2.8rem; margin: 10px 0;">The Canvas</h1>
+      <p style="color: var(--text-gray);">Every step of the renovation, documented month by month.</p>
+     <a href="index.html" id="back-btn" class="btn btn-secondary btn-back">← Back to Project Home</a>
+    </div>
+  </header>
+
+  <main class="container">
+    
+    <section class="month-section">
+      <h2 class="month-title">on going</h2>
+      <p class="month-subtitle">blablabla</p>
+      
+      <div class="grid-4x4">
+        <div class="photo-card">
+          <div class="photo-img">[ Photo ]</div>
+          <div class="photo-caption">texte</div>
+        </div>
+        <div class="photo-card">
+          <div class="photo-img">[ Photo ]</div>
+          <div class="photo-caption">texte</div>
+        </div>
+        <div class="photo-card">
+          <div class="photo-img">[ Photo ]</div>
+          <div class="photo-caption">texte</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="month-section">
+      <h2 class="month-title">premier mois</h2>
+      <p class="month-subtitle">texte</p>
+      
+      <div class="grid-4x4">
+        <div class="photo-card">
+          <div class="photo-img">[ Photo ]</div>
+          <div class="photo-caption">texte</div>
+        </div>
+        <div class="photo-card">
+          <div class="photo-img">[ Photo ]</div>
+          <div class="photo-caption">texte</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer style="text-align: center; padding: 50px 0; color: var(--text-gray); border-top: 1px solid #eee; margin-top: 50px;">
+    <p>© 2026 Inoue Project. Documenting history.</p>
+  </footer>
+  <script>
+    document.getElementById('back-btn').addEventListener('click', function(e) {
+      e.preventDefault(); // On empêche la redirection classique dans un premier temps
+      
+      window.close(); // On tente de fermer l'onglet actif
+      
+      // Sécurité : si l'onglet ne se ferme pas (par exemple si l'utilisateur a tapé l'URL directement)
+      // on le redirige normalement au bout de 50 millisecondes.
+      setTimeout(function() {
+        window.location.href = "index.html";
+      }, 50);
+    });
+  </script>
+</body>
+</html>
+</body>
+</html>

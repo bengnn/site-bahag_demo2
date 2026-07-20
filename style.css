@@ -1,0 +1,307 @@
+/* --- VARIABLES & RESET --- */
+:root {
+  --accent-blue: #93D4E5; /* Le bleu exact du panneau japonais */
+  --bg-color: #ffffff;
+  --bg-light: #f9f9f9;
+  --text-dark: #111111;
+  --text-gray: #666666;
+  --sidebar-width: 260px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  color: var(--text-dark);
+  background: var(--bg-color);
+  line-height: 1.6;
+}
+
+/* --- TYPOGRAPHY & UTILS --- */
+h1, h2, h3 { font-weight: 700; line-height: 1.2; }
+h2 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+.subtitle { color: var(--text-gray); margin-bottom: 3rem; }
+.text-center { text-align: center; }
+.mt-1 { margin-top: 1rem; }
+.mt-3 { margin-top: 3rem; }
+.mt-5 { margin-top: 5rem; }
+.bg-light { background: var(--bg-light); }
+.container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+
+/* --- MOBILE NAV TOGGLE --- */
+.mobile-nav-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background: white;
+  position: fixed;
+  top: 0; width: 100%;
+  z-index: 1000;
+  border-bottom: 1px solid #eee;
+}
+.logo-mobile { font-size: 1.5rem; font-weight: 700; letter-spacing: 2px; }
+#hamburger { background: none; border: none; font-size: 1.8rem; cursor: pointer; }
+
+/* --- SIDEBAR NAVIGATION --- */
+.sidebar {
+  position: fixed;
+  top: 0; left: -100%; /* Hidden on mobile by default */
+  width: var(--sidebar-width);
+  height: 100vh;
+  background: white;
+  border-right: 1px solid #eee;
+  padding: 40px 20px;
+  transition: left 0.3s ease;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+}
+.sidebar.active { left: 0; } /* Class added by JS for mobile */
+.sidebar .logo { margin-bottom: 50px; text-align: center; }
+.sidebar .logo h2 { font-size: 2rem; letter-spacing: 3px; }
+.sidebar .logo p { color: var(--accent-blue); font-weight: 600; text-transform: uppercase; font-size: 0.8rem; }
+
+.nav-menu ul { list-style: none; }
+.nav-menu li { margin-bottom: 15px; }
+.nav-link {
+  text-decoration: none;
+  color: var(--text-gray);
+  font-weight: 400;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  display: block;
+  padding: 8px 15px;
+  border-radius: 4px;
+}
+.nav-link:hover, .nav-link.active {
+  color: var(--text-dark);
+  font-weight: 600;
+  background: var(--bg-light);
+}
+.nav-link.highlight {
+  color: var(--accent-blue);
+  font-weight: 600;
+}
+
+/* --- MAIN CONTENT OVERRIDES --- */
+.main-content {
+  margin-top: 60px; /* Space for mobile nav */
+}
+
+/* --- BUTTONS (Micro-interactions) --- */
+.btn {
+  display: inline-block;
+  padding: 12px 30px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  border: none;
+}
+.btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+.btn-primary { 
+  background: var(--accent-blue); 
+  color: var(--text-dark); /* Texte foncé pour un contraste parfait */
+}
+.btn-primary:hover { filter: brightness(1.1); } /* Éclaircit un peu le bleu au survol */
+.btn-secondary { background: var(--bg-light); color: var(--text-dark); border: 1px solid #ddd; }
+.btn-full { width: 100%; }
+.reassurance { 
+  font-size: 0.95rem; 
+  color: rgba(255, 255, 255, 0.95); /* Blanc bien visible */
+  margin-top: 15px; 
+  font-weight: 400;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8); /* L'astuce magique pour la lisibilité sur une image */
+}
+
+/* On s'assure que la réassurance du formulaire (qui est sur fond blanc) reste foncée */
+#apply .reassurance {
+  color: var(--text-gray);
+  text-shadow: none;
+}
+
+/* --- HERO SECTION --- */
+.hero {
+  height: calc(100vh - 60px);
+  background: #ccc; /* Placeholder if no image */
+  background: url('placeholder-house.jpg') center/cover no-repeat;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0 5%;
+}
+.hero-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.5); }
+.hero-content {
+  position: relative;
+  color: white;
+  max-width: 600px;
+}
+.hero-content h1 { font-size: 3.5rem; margin-bottom: 20px; }
+.value-proposition { font-size: 1.2rem; margin-bottom: 30px; line-height: 1.8; }
+.hero-actions { display: flex; gap: 15px; flex-wrap: wrap; }
+
+/* --- SECTIONS SPACING --- */
+.section { padding: 100px 0; }
+.section-anchor { scroll-margin-top: 60px; }
+
+/* --- VIDEO & SPLIT SECTION --- */
+.video-placeholder {
+  width: 100%;
+  height: 400px;
+  background: #222;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}
+.play-icon { font-size: 3rem; color: var(--accent-blue); margin-bottom: 10px; }
+
+.split-section {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  align-items: center;
+}
+.img-placeholder, .avatar-placeholder {
+  background: #eaeaea;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+}
+.img-placeholder { height: 400px; width: 100%; }
+
+/* --- CARDS & GRID --- */
+.cards-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+}
+.card {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  transition: transform 0.3s ease;
+}
+.card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+.avatar-placeholder { width: 120px; height: 120px; border-radius: 50%; margin: 0 auto 20px; }
+.profile-card h3 { margin-bottom: 5px; }
+.profile-card .role { color: var(--accent-blue); font-weight: 600; font-size: 0.9rem; margin-bottom: 15px; }
+
+.icon-placeholder { font-size: 3rem; margin-bottom: 20px; }
+
+/* --- GALLERY --- */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+.gallery-item { background: #ddd; height: 200px; display: flex; align-items: center; justify-content: center; border-radius: 4px;}
+
+/* --- FORM --- */
+.form-container {
+  max-width: 600px;
+  margin: 0 auto;
+  background: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+}
+.form-group { margin-bottom: 20px; text-align: left; }
+.form-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 0.9rem; }
+input, select, textarea {
+  width: 100%; padding: 12px;
+  border: 1px solid #ddd; border-radius: 4px;
+  font-family: inherit;
+  transition: border-color 0.3s ease;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none; border-color: var(--accent-blue);
+}
+
+/* --- ANIMATIONS --- */
+.reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* --- MODAL --- */
+.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000; }
+.modal-content { background: white; width: 90%; max-width: 400px; margin: 100px auto; padding: 40px; border-radius: 8px; }
+
+/* =========================================
+   MEDIA QUERIES (DESKTOP) 
+   ========================================= */
+@media screen and (min-width: 768px) {
+  .mobile-nav-toggle { display: none; }
+  .sidebar { left: 0; }
+  .main-content { margin-top: 0; margin-left: var(--sidebar-width); }
+  .hero { height: 100vh; padding: 0 10%; }
+  .hero-content h1 { font-size: 4.5rem; }
+  
+  .split-section { grid-template-columns: 1fr 1fr; }
+  .cards-grid { grid-template-columns: repeat(2, 1fr); }
+  .three-cols { grid-template-columns: repeat(3, 1fr); }
+  .gallery-grid { grid-template-columns: repeat(4, 1fr); }
+}
+/* --- BANDEAU PERMANENT --- */
+.top-banner {
+  position: fixed; /* Reste figé à l'écran */
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: var(--text-dark); /* Fond noir (ou var(--accent-blue) pour du bleu) */
+  color: white;
+  text-align: center;
+  padding: 10px 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  z-index: 3000; /* Toujours au-dessus de tout le reste */
+}
+
+.top-banner a {
+  color: var(--accent-blue);
+  text-decoration: underline;
+  margin-left: 10px;
+}
+
+/* --- DÉCALAGES POUR NE RIEN CACHER --- */
+/* 1. On pousse tout le corps du site vers le bas */
+body {
+  padding-top: 40px; 
+}
+
+/* 2. On descend le menu mobile sous le bandeau */
+.mobile-nav-toggle {
+  top: 40px; 
+}
+
+/* 3. On ajuste la barre latérale sur PC (Sidebar) */
+.sidebar {
+  top: 40px; 
+  height: calc(100vh - 40px); /* On réduit sa taille pour ne pas déborder en bas */
+}
+
+/* 4. On ajuste le Hero pour qu'il prenne bien la hauteur d'écran restante */
+.hero {
+  height: calc(100vh - 100px); /* 60px menu mobile + 40px bandeau */
+}
+
+@media screen and (min-width: 768px) {
+  .hero { 
+    height: calc(100vh - 40px); /* Sur PC, juste l'écran moins le bandeau */
+  }
+}
