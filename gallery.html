@@ -65,72 +65,39 @@
     }
   </style>
 </head>
-<body style="padding-top: 0;"> <header class="gallery-page-header">
+<body style="padding-top: 0;"> 
+
+  <header class="gallery-page-header">
     <div class="container">
       <span style="color: var(--accent-blue); font-weight: 700; letter-spacing: 2px;">INOUE.</span>
       <h1 style="font-size: 2.8rem; margin: 10px 0;">The Canvas</h1>
       <p style="color: var(--text-gray);">Every step of the renovation, documented month by month.</p>
-     <a href="index.html" id="back-btn" class="btn btn-secondary btn-back">← Back to Project Home</a>
+      <a href="index.html" id="back-btn" class="btn btn-secondary btn-back">← Back to Project Home</a>
     </div>
   </header>
 
+  <!-- Ce conteneur sera rempli dynamiquement par script.js avec les photos de Sanity -->
   <main class="container">
-    
-    <section class="month-section">
-      <h2 class="month-title">on going</h2>
-      <p class="month-subtitle">blablabla</p>
-      
-      <div class="grid-4x4">
-        <div class="photo-card">
-          <div class="photo-img">[ Photo ]</div>
-          <div class="photo-caption">texte</div>
-        </div>
-        <div class="photo-card">
-          <div class="photo-img">[ Photo ]</div>
-          <div class="photo-caption">texte</div>
-        </div>
-        <div class="photo-card">
-          <div class="photo-img">[ Photo ]</div>
-          <div class="photo-caption">texte</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="month-section">
-      <h2 class="month-title">premier mois</h2>
-      <p class="month-subtitle">texte</p>
-      
-      <div class="grid-4x4">
-        <div class="photo-card">
-          <div class="photo-img">[ Photo ]</div>
-          <div class="photo-caption">texte</div>
-        </div>
-        <div class="photo-card">
-          <div class="photo-img">[ Photo ]</div>
-          <div class="photo-caption">texte</div>
-        </div>
-      </div>
-    </section>
-
+    <p style="text-align: center; color: var(--text-gray); padding: 40px;">Chargement des photos...</p>
   </main>
 
   <footer style="text-align: center; padding: 50px 0; color: var(--text-gray); border-top: 1px solid #eee; margin-top: 50px;">
     <p>© 2026 Inoue Project. Documenting history.</p>
   </footer>
+
+  <!-- Script pour le bouton retour -->
   <script>
     document.getElementById('back-btn').addEventListener('click', function(e) {
-      e.preventDefault(); // On empêche la redirection classique dans un premier temps
-      
-      window.close(); // On tente de fermer l'onglet actif
-      
-      // Sécurité : si l'onglet ne se ferme pas (par exemple si l'utilisateur a tapé l'URL directement)
-      // on le redirige normalement au bout de 50 millisecondes.
+      e.preventDefault(); 
+      window.close(); 
       setTimeout(function() {
         window.location.href = "index.html";
       }, 50);
     });
   </script>
-</body>
-</html>
+
+  <!-- 🟢 LE SCRIPT SANITY QUI MANQUAIT : -->
+  <script src="script.js"></script>
+
 </body>
 </html>
