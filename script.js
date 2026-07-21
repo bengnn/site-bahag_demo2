@@ -153,68 +153,48 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // Partie GALERIE CHRONOLOGIQUE (gallery.html)
-      const galleryMain = document.querySelector('main.container');
+      // Sélecteur souple : cherche <main.container> OU <main> OU .gallery-container
+      const galleryMain = document.querySelector('main.container') || document.querySelector('main') || document.querySelector('.gallery-container');
+
       if (galleryMain && !document.getElementById('home') && data.gallery) {
         const monthlyGroups = {};
+
         data.gallery.forEach(item => {
-          const key = item.date ? item.date.substring(0, 7) : 'ongoing';
+          // Sécurité : évite de planter si une photo n'a pas d'image valide
+          if (!item.imageUrl) return;
+
+          // Si aucune date n'est renseignée dans Sanity, regroupe sous "ongoing"
+          const key = (item.date && item.date.length >= 7) ? item.date.substring(0, 7) : 'ongoing';
           if (!monthlyGroups[key]) monthlyGroups[key] = [];
           monthlyGroups[key].push(item);
         });
 
         const translateMonth = (str) => {
-          if (str === 'ongoing') return "En cours";
+          if (str === 'ongoing') return "En cours / Photos récentes";
           const [year, month] = str.split('-');
           const monthsFr = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
-          return `${monthsFr[parseInt(month) - 1]} ${year}`;
+          const monthIndex = parseInt(month, 10) - 1;
+          return `${monthsFr[monthIndex] || ''} ${year}`;
         };
 
-        galleryMain.innerHTML = Object.keys(monthlyGroups).sort().reverse().map(monthKey => `
-          <section class="month-section">
-            <h2 class="month-title">${translateMonth(monthKey)}</h2>
-            <div class="grid-4x4 mt-3">
-              ${monthlyGroups[monthKey].map(photo => `
-                <div class="photo-card reveal">
-                  <div class="photo-img" style="background: url('${photo.imageUrl}') center/cover no-repeat; height:200px;"></div>
-                  <div class="photo-caption">${photo.title || ''}</div>
-                </div>
-              `).join('')}
-            </div>
-          </section>
-        `).join('');
-      }
+        const sortedKeys = Object.keys(monthlyGroups).sort().reverse();
 
-      // On active l'Observer sur TOUS les éléments ".reveal" (les anciens + les nouveaux injectés par Sanity)
-      document.querySelectorAll(".reveal").forEach(el => revealObserver.observe(el));
-    })
-    .catch(err => console.error("Erreur Sanity :", err));
-
-
-  // --- 3. SCROLL SPY (Mise à jour du menu actif selon la section) ---
-  const sections = document.querySelectorAll(".section-anchor");
-
-  const sectionObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        // Enlever la classe active de tous les liens
-        navLinks.forEach(link => link.classList.remove("active"));
-        
-        // Ajouter la classe active au lien correspondant à la section visible
-        const id = entry.target.getAttribute("id");
-        const activeLink = document.querySelector(`.nav-link[href="#${id}"]`);
-        
-        // On ne met pas en "active" le bouton Apply qui a déjà son propre style (highlight)
-        if (activeLink && !activeLink.classList.contains('highlight')) {
-          activeLink.classList.add("active");
+        if (sortedKeys.length > 0) {
+          galleryMain.innerHTML = sortedKeys.map(monthKey => `
+            <section class="month-section" style="margin-bottom: 40px;">
+              <h2 class="month-title" style="margin-bottom: 20px;">${translateMonth(monthKey)}</h2>
+              <div class="grid-4x4 mt-3">
+                ${monthlyGroups[monthKey].map(photo => `
+                  <div class="photo-card visible" style="border-radius: 8px; overflow: hidden;">
+                    <div class="photo-img" style="background: url('${photo.imageUrl}') center/cover no-repeat; height:200px;"></div>
+                    ${photo.title ? `<div class="photo-caption" style="padding: 10px;">${photo.title}</div>` : ''}
+                  </div>
+                `).join('')}
+              </div>
+            </section>
+          `).join('');
         }
       }
-    });
-  }, { 
-    rootMargin: "-20% 0px -70% 0px" // Ajustement pour détecter la section au milieu de l'écran
-  });
-
-  sections.forEach(section => sectionObserver.observe(section));
-
   // --- 4. GESTION DU FORMULAIRE DE CANDIDATURE ---
   const form = document.getElementById("applicationForm");
   const successModal = document.getElementById("successModal");
