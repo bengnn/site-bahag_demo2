@@ -1,12 +1,11 @@
 document.documentElement.classList.remove("no-js");
 
 // --- CONFIGURATION SANITY ---
-// ⚠️ REMPLACE 'TON_PROJECT_ID_ICI' PAR TON VRAI ID SANITY !
 const SANITY_PROJECT_ID = "xnhbgvxu"; 
 const SANITY_DATASET = "production";
 const SANITY_VERSION = "v2023-08-01";
 
-// Requête GROQ pour récupérer les données et extraire proprement les URL des images
+// Requête GROQ
 const GROQ_QUERY = encodeURIComponent(`{
   "settings": *[_type == "siteSettings"][0],
   "home": *[_type == "homePage"][0]{
@@ -26,24 +25,19 @@ const GROQ_QUERY = encodeURIComponent(`{
 
 const SANITY_URL = `https://${SANITY_PROJECT_ID}.api.sanity.io/${SANITY_VERSION}/data/query/${SANITY_DATASET}?query=${GROQ_QUERY}`;
 
-// --- FIX ABSOLU DU RETOUR À L'ACCUEIL AU RAFRAÎCHISSEMENT ---
-// On le place en dehors du DOMContentLoaded pour couper la mémoire du navigateur INSTANTANÉMENT
+// --- FIX RETOUR À L'ACCUEIL AU RAFRAÎCHISSEMENT ---
 if (window.history && history.scrollRestoration) {
-  history.scrollRestoration = 'manual'; // Empêche le navigateur de restaurer le scroll
+  history.scrollRestoration = 'manual';
 }
 
-// On force le retour en haut de page immédiat
 window.scrollTo(0, 0);
 
-// Si l'URL contient une ancre, on la nettoie proprement sans faire sursauter l'écran
 if (window.location.hash && window.location.hash !== '#home') {
   window.history.replaceState(null, null, window.location.pathname + window.location.search);
 }
 
-
 document.addEventListener("DOMContentLoaded", () => {
   
-  // Petite sécurité supplémentaire après le chargement du DOM pour consolider le retour en haut
   setTimeout(() => {
     window.scrollTo(0, 0);
   }, 10);
@@ -53,32 +47,31 @@ document.addEventListener("DOMContentLoaded", () => {
   const sidebar = document.getElementById('sidebar');
   const navLinks = document.querySelectorAll('.nav-link');
 
-  // Ouvrir/Fermer le menu au clic sur l'icône
-  hamburger.addEventListener('click', () => {
-    sidebar.classList.toggle('active');
-  });
+  if (hamburger && sidebar) {
+    hamburger.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+    });
+  }
 
-  // Fermer le menu mobile quand on clique sur un lien
   navLinks.forEach(link => {
     link.addEventListener('click', () => {
-      if (window.innerWidth < 768) {
+      if (window.innerWidth < 768 && sidebar) {
         sidebar.classList.remove('active');
       }
     });
   });
 
-  // --- 2. ANIMATION AU SCROLL (Déclaration de l'Observer) ---
-  const revealObserver = new IntersectionObserver((entries, observer) => {
+  // --- 2. ANIMATION AU SCROLL ---
+  const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add("visible");
       }
     });
   }, { 
-    threshold: 0.15, // Se déclenche quand 15% de l'élément est visible
+    threshold: 0.15,
     rootMargin: "0px 0px -50px 0px"
   });
-
 
   // --- INTERCONNEXION SANITY (INJECTION DES DONNÉES) ---
   fetch(SANITY_URL)
@@ -87,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = json.result;
       if (!data) return;
 
-      // Récupération du bandeau d'alerte global
+      // Bandeau d'alerte global
       if (data.settings && data.settings.bannerText) {
         const bannerP = document.querySelector('.top-banner p');
         if (bannerP) {
@@ -115,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         }
 
-        // Injection dynamique des directeurs
+        // Directeurs
         const teamGrid = document.querySelector('#team .cards-grid');
         if (teamGrid && home.directors) {
           teamGrid.innerHTML = home.directors.map(dir => `
@@ -130,7 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
           `).join('');
         }
 
-        // Injection dynamique des rôles recherchés
+        // Rôles
         const rolesGrid = document.querySelector('#roles .cards-grid');
         if (rolesGrid && home.neededRoles) {
           rolesGrid.innerHTML = home.neededRoles.map(role => `
@@ -153,17 +146,13 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // Partie GALERIE CHRONOLOGIQUE (gallery.html)
-      // Sélecteur souple : cherche <main.container> OU <main> OU .gallery-container
-      const galleryMain = document.querySelector('main.container') || document.querySelector('main') || document.querySelector('.gallery-container');
+      const galleryMain = document.querySelector('main.container');
 
       if (galleryMain && !document.getElementById('home') && data.gallery) {
         const monthlyGroups = {};
 
         data.gallery.forEach(item => {
-          // Sécurité : évite de planter si une photo n'a pas d'image valide
           if (!item.imageUrl) return;
-
-          // Si aucune date n'est renseignée dans Sanity, regroupe sous "ongoing"
           const key = (item.date && item.date.length >= 7) ? item.date.substring(0, 7) : 'ongoing';
           if (!monthlyGroups[key]) monthlyGroups[key] = [];
           monthlyGroups[key].push(item);
@@ -195,43 +184,61 @@ document.addEventListener("DOMContentLoaded", () => {
           `).join('');
         }
       }
+
+      // Activer l'observer sur tous les éléments reveal
+      document.querySelectorAll(".reveal").forEach(el => revealObserver.observe(el));
+    })
+    .catch(err => console.error("Erreur Sanity :", err));
+
+  // --- 3. SCROLL SPY (Mise en gras de l'onglet actif au scroll) ---
+  const sections = document.querySelectorAll(".section-anchor");
+
+  const sectionObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => link.classList.remove("active"));
+        const id = entry.target.getAttribute("id");
+        const activeLink = document.querySelector(`.nav-link[href="#${id}"]`);
+        if (activeLink && !activeLink.classList.contains('highlight')) {
+          activeLink.classList.add("active");
+        }
+      }
+    });
+  }, { 
+    rootMargin: "-20% 0px -70% 0px"
+  });
+
+  sections.forEach(section => sectionObserver.observe(section));
+
   // --- 4. GESTION DU FORMULAIRE DE CANDIDATURE ---
   const form = document.getElementById("applicationForm");
   const successModal = document.getElementById("successModal");
   const closeSuccess = document.getElementById("closeSuccess");
 
-  // La sécurité "if (form)" évite que le script ne plante sur gallery.html où le formulaire n'existe pas
   if (form) {
     form.addEventListener("submit", (e) => {
-      e.preventDefault(); // Empêche le rechargement de la page
-
-      // Simulation d'envoi de données
+      e.preventDefault();
       const applicant = {
         name: document.getElementById("name").value,
         email: document.getElementById("email").value,
         role: document.getElementById("role").value,
         message: document.getElementById("message").value,
       };
-
       console.log("Nouvelle candidature reçue :", applicant);
-
-      // Affichage du modal de succès
-      successModal.style.display = "block";
-      form.reset(); // Vider le formulaire
+      if (successModal) successModal.style.display = "block";
+      form.reset();
     });
   }
 
-  // Fermer le modal
   if (closeSuccess) {
     closeSuccess.addEventListener("click", () => {
-      successModal.style.display = "none";
+      if (successModal) successModal.style.display = "none";
     });
   }
 
-  // Fermer le modal si on clique en dehors
   window.addEventListener("click", (e) => {
     if (e.target == successModal) {
-      successModal.style.display = "none";
+      if (successModal) successModal.style.display = "none";
     }
   });
 
