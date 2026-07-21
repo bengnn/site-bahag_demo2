@@ -1,0 +1,7 @@
+node_modules/
+.sanity/
+dist/
+photos/
+.env
+site_bahag/node_modules/
+**/photos/
